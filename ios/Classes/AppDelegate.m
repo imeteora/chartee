@@ -18,9 +18,8 @@
 	window = [[UIWindow alloc]initWithFrame:[[UIScreen mainScreen]bounds]];
 	[[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationFade];
     
-    CandleViewController *contentViewController = [[CandleViewController alloc] init];
+    CandleViewController *contentViewController = [[CandleViewController alloc] initWithNibName:nil bundle:nil];
 	window.rootViewController = contentViewController;
-//    [contentViewController release];
 
     [self.window makeKeyAndVisible];
 	return YES;
