@@ -61,13 +61,14 @@
             float iNx  = sec.frame.origin.x+sec.paddingLeft+(i+1-chart.rangeFrom)*chart.plotWidth;
             float iy = [chart getLocalY:value withSection:section withAxis:yAxis];				
             CGContextSetStrokeColorWithColor(context, [[UIColor alloc] initWithRed:R green:G blue:B alpha:1.0].CGColor);
-            CGContextMoveToPoint(context, ix+chart.plotWidth/2, iy);
+            if (!isnan(iy)) {
+                CGContextMoveToPoint(context, ix+chart.plotWidth/2, iy);
+            }
             
             float y = [chart getLocalY:([[[data objectAtIndex:(i+1)] objectAtIndex:0] floatValue]) withSection:section withAxis:yAxis];
             if(!isnan(y)){
                 CGContextAddLineToPoint(context, iNx+chart.plotWidth/2, y);
             }
-            
             CGContextStrokePath(context);
         }	
     }
@@ -138,17 +139,14 @@
         NSString *fmt = [@"%@:" stringByAppendingFormat:@"%@",format];
         [l appendFormat:fmt,lbl,value];
         [tmp setObject:l forKey:@"text"];
-        [l release];
         
         NSMutableString *clr = [[NSMutableString alloc] init];
         [clr appendFormat:@"%f,",R];
         [clr appendFormat:@"%f,",G];
         [clr appendFormat:@"%f",B];
         [tmp setObject:clr forKey:@"color"];
-        [clr release];
         
         [label addObject:tmp];
-        [tmp release];
     }	    
 }
 

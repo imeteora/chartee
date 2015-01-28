@@ -43,7 +43,7 @@
     static NSString *cellIdentifier = @"Cell";
 	UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
     if (cell == nil) {
-        cell = [[[UITableViewCell alloc] initWithStyle: UITableViewCellStyleSubtitle reuseIdentifier:cellIdentifier] autorelease];
+        cell = [[UITableViewCell alloc] initWithStyle: UITableViewCellStyleSubtitle reuseIdentifier:cellIdentifier];
 		CGRect cellFrame = [cell frame];
 		[cell setFrame:CGRectMake(cellFrame.origin.x, cellFrame.origin.y, cellFrame.size.width, 20)];
 		[[cell textLabel] setFont:[UIFont systemFontOfSize:16]];
@@ -79,10 +79,9 @@
 }
 
 - (void)dealloc {
-    [super dealloc];
-	[items release];
-	[selectedItems release];
-	[searchBar release];
+    items = nil;
+    selectedItems = nil;
+    searchBar = nil;
 }
 
 @end

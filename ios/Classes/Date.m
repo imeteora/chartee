@@ -18,10 +18,10 @@
 }
 
 //该日期是该年的第几周
-- (int )getWeekOfYear
+- (NSInteger )getWeekOfYear
 {
-	int i;
-	int year = [self getYear];
+	NSInteger i;
+	NSInteger year = [self getYear];
 	NSDate *date = [self endOfWeek];
 	for (i = 1;[[date dateAfterDay:-7 * i] getYear] == year;i++) 
 	{
@@ -29,7 +29,7 @@
 	return i;
 }
 //返回day天后的日期(若day为负数,则为|day|天前的日期)
-- (NSDate *)dateAfterDay:(int)day
+- (NSDate *)dateAfterDay:(NSInteger)day
 {
 	NSCalendar *calendar = [NSCalendar currentCalendar];
 	// Get the weekday component of the current date
@@ -38,18 +38,16 @@
 	// to get the end of week for a particular date, add (7 - weekday) days
 	[componentsToAdd setDay:day];
 	NSDate *dateAfterDay = [calendar dateByAddingComponents:componentsToAdd toDate:self options:0];
-	[componentsToAdd release];
 	
 	return dateAfterDay;
 }
 //month个月后的日期
-- (NSDate *)dateafterMonth:(int)month
+- (NSDate *)dateafterMonth:(NSInteger)month
 {
 	NSCalendar *calendar = [NSCalendar currentCalendar];
 	NSDateComponents *componentsToAdd = [[NSDateComponents alloc] init];
 	[componentsToAdd setMonth:month];
 	NSDate *dateAfterMonth = [calendar dateByAddingComponents:componentsToAdd toDate:self options:0];
-	[componentsToAdd release];
 	
 	return dateAfterMonth;
 }
@@ -118,7 +116,6 @@
 	NSDateFormatter *mdf = [[NSDateFormatter alloc] init];
 	[mdf setDateFormat:@"yyyy-MM-dd"];
 	NSDate *midnight = [mdf dateFromString:[mdf stringFromDate:self]];
-	[mdf release];
 	
 	return (int)[midnight timeIntervalSinceNow] / (60*60*24) *-1;
 }
@@ -138,7 +135,7 @@
 			text = @"Yesterday";
 			break;
 		default:
-			text = [NSString stringWithFormat:@"%d days ago", daysAgo];
+			text = [NSString stringWithFormat:@"%lu days ago", (unsigned long)daysAgo];
 	}
 	return text;
 }
@@ -157,9 +154,7 @@
 + (NSDate *)dateFromString:(NSString *)string withFormat:(NSString *)format {
 	NSDateFormatter *inputFormatter = [[NSDateFormatter alloc] init];
 	[inputFormatter setDateFormat:format];
-	NSDate *date = [inputFormatter dateFromString:string];
-	[inputFormatter release];
-	return date;
+	return [inputFormatter dateFromString:string];
 }
 
 + (NSString *)stringFromDate:(NSDate *)date withFormat:(NSString *)format {
@@ -200,7 +195,6 @@
 		NSDateComponents *componentsToSubtract = [[NSDateComponents alloc] init];
 		[componentsToSubtract setDay:-7];
 		NSDate *lastweek = [calendar dateByAddingComponents:componentsToSubtract toDate:today options:0];
-		[componentsToSubtract release];
 		if ([date compare:lastweek] == NSOrderedDescending) {
 			[displayFormatter setDateFormat:@"EEEE"]; // Tuesday
 		} else {
@@ -225,7 +219,6 @@
 	
 	// use display formatter to return formatted date string
 	displayString = [displayFormatter stringFromDate:date];
-	[displayFormatter release];
 	return displayString;
 }
 
@@ -237,7 +230,7 @@
 	NSDateFormatter *outputFormatter = [[NSDateFormatter alloc] init];
 	[outputFormatter setDateFormat:format];
 	NSString *timestamp_str = [outputFormatter stringFromDate:self];
-	[outputFormatter release];
+
 	return timestamp_str;
 }
 
@@ -250,7 +243,6 @@
 	[outputFormatter setDateStyle:dateStyle];
 	[outputFormatter setTimeStyle:timeStyle];
 	NSString *outputString = [outputFormatter stringFromDate:self];
-	[outputFormatter release];
 	return outputString;
 }
 //返回周日的的开始时间
@@ -278,7 +270,7 @@
 	[componentsToSubtract setDay: 0 - ([weekdayComponents weekday] - 1)];
 	beginningOfWeek = nil;
 	beginningOfWeek = [calendar dateByAddingComponents:componentsToSubtract toDate:self options:0];
-	[componentsToSubtract release];
+    componentsToSubtract = nil;
 	
 	//normalize to midnight, extract the year, month, and day components and create a new date from those components.
 	NSDateComponents *components = [calendar components:(NSYearCalendarUnit | NSMonthCalendarUnit |NSDayCalendarUnit)
@@ -312,7 +304,7 @@
 	// to get the end of week for a particular date, add (7 - weekday) days
 	[componentsToAdd setDay:(7 - [weekdayComponents weekday])];
 	NSDate *endOfWeek = [calendar dateByAddingComponents:componentsToAdd toDate:self options:0];
-	[componentsToAdd release];
+    componentsToAdd = nil;
 	
 	return endOfWeek;
 }

@@ -20,7 +20,7 @@
     
     CandleViewController *contentViewController = [[CandleViewController alloc] init];
 	window.rootViewController = contentViewController;
-    [contentViewController release];
+//    [contentViewController release];
 
     [self.window makeKeyAndVisible];
 	return YES;
@@ -75,8 +75,9 @@
 }
 
 - (void)dealloc {
-	[super dealloc];
-    [window release];
+    window = nil;
+//	[super dealloc];
+//    [window release];
 }
 
 @end

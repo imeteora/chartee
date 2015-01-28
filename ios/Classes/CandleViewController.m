@@ -5,9 +5,10 @@
 //
 
 #import "CandleViewController.h"
-#import "ASIHTTPRequest.h"
+//#import "ASIHTTPRequest.h"
 #import "ResourceHelper.h"
-#import "JSONKit.h"
+//#import "JSONKit.h"
+#import "NSString+addtional.h"
 
 @implementation CandleViewController
 
@@ -39,39 +40,32 @@
 	self.req_freq   = @"d";
 	self.req_type   = @"H";
 	self.req_url    = @"http://ichart.yahoo.com/table.csv?s=%@&g=%@";
-	
-	[self.view setFrame:CGRectMake(0, 0, [[UIScreen mainScreen] bounds].size.height, [[UIScreen mainScreen] bounds].size.width)];
 
-    
 	//candleChart
 	self.candleChart = [[Chart alloc] initWithFrame:CGRectMake(0, 40, self.view.frame.size.width, self.view.frame.size.height-40)];
 	[self.view addSubview:candleChart];
     
     //toolbar
 	self.toolBar = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 40)];
-	[self.toolBar release];
     
     [self.view addSubview:toolBar];
 	//status bar
 	self.status = [[UILabel alloc] initWithFrame:CGRectMake(220, 0, 200, 40)];
-	[self.status release];
 	self.status.font = [UIFont systemFontOfSize:14];
 	self.status.backgroundColor = [UIColor clearColor];
     self.status.textColor = [UIColor whiteColor];
 	[self.toolBar addSubview:status];
 	
     
-	UIImage *btnImg = [[ResourceHelper loadImage:@"candle_chart"] retain];
-	UIImage *btnImgBg = [[ResourceHelper loadImage:[@"candle_chart" stringByAppendingFormat:@"_%@",@"selected"]] retain];
-	UIButton *btn = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
+	UIImage *btnImg = [ResourceHelper loadImage:@"candle_chart"];
+	UIImage *btnImgBg = [ResourceHelper loadImage:[@"candle_chart" stringByAppendingFormat:@"_%@",@"selected"]] ;
+	UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
 	btn.tag = 2;
 	[btn setFrame:CGRectMake(0,0, 80, 40)];
 	[btn setImage:btnImg forState:UIControlStateNormal];
 	[btn setImage:btnImgBg forState:UIControlStateSelected];
 	[btn addTarget:self action:@selector(buttonPressed:) forControlEvents:UIControlEventTouchUpInside];
 	[self.toolBar addSubview:btn];
-	[btn release];
-	[btnImg release];
     
     UILabel *link = [[UILabel alloc] initWithFrame:CGRectMake(self.toolBar.frame.size.width/2-130, 0, 260, 40)];
 	link.font     = [UIFont systemFontOfSize:14];
@@ -100,46 +94,36 @@
     //candleChart freqView
 	self.candleChartFreqView = [[UIView alloc] initWithFrame:CGRectMake(80, -160, 120, 120)];
 	[self.candleChartFreqView setBackgroundColor:[[UIColor alloc] initWithRed:0/255.f green:0/255.f blue:255/255.f alpha:1]];
-	[self.candleChartFreqView release];
 
-    btnImg = [[ResourceHelper loadImage:@"k1d"] retain];
-    btnImgBg = [[ResourceHelper loadImage:[@"k1d" stringByAppendingFormat:@"_%@",@"selected"]] retain];
-    btn = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
+    btnImg = [ResourceHelper loadImage:@"k1d"] ;
+    btnImgBg = [ResourceHelper loadImage:[@"k1d" stringByAppendingFormat:@"_%@",@"selected"]];
+    btn = [UIButton buttonWithType:UIButtonTypeCustom];
 	btn.tag = 26;
 	[btn setFrame:CGRectMake(0,0, 120, 40)];
 	[btn setImage:btnImg forState:UIControlStateNormal];
 	[btn setImage:btnImgBg forState:UIControlStateSelected];
 	[btn addTarget:self action:@selector(buttonPressed:) forControlEvents:UIControlEventTouchUpInside];
 	[candleChartFreqView addSubview:btn];
-	[btn release];
-	[btnImg release];
-	[btnImgBg release];
 	
-	btnImg = [[ResourceHelper loadImage:@"k1w"] retain];
-	btnImgBg = [[ResourceHelper loadImage:[@"k1w" stringByAppendingFormat:@"_%@",@"selected"]] retain];
-	btn = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
+	btnImg = [ResourceHelper loadImage:@"k1w"];
+	btnImgBg = [ResourceHelper loadImage:[@"k1w" stringByAppendingFormat:@"_%@",@"selected"]] ;
+	btn = [UIButton buttonWithType:UIButtonTypeCustom];
 	btn.tag = 27;
 	[btn setFrame:CGRectMake(0,40, 120, 40)];
 	[btn setImage:btnImg forState:UIControlStateNormal];
 	[btn setImage:btnImgBg forState:UIControlStateSelected];
 	[btn addTarget:self action:@selector(buttonPressed:) forControlEvents:UIControlEventTouchUpInside];
 	[candleChartFreqView addSubview:btn];
-	[btn release];
-	[btnImg release];
-	[btnImgBg release];
 	
-	btnImg = [[ResourceHelper loadImage:@"k1m"] retain];
-	btnImgBg = [[ResourceHelper loadImage:[@"k1m" stringByAppendingFormat:@"_%@",@"selected"]] retain];
-	btn = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
+	btnImg = [ResourceHelper loadImage:@"k1m"];
+	btnImgBg = [ResourceHelper loadImage:[@"k1m" stringByAppendingFormat:@"_%@",@"selected"]];
+	btn = [UIButton buttonWithType:UIButtonTypeCustom];
 	btn.tag = 28;
 	[btn setFrame:CGRectMake(0,80, 120, 40)];
 	[btn setImage:btnImg forState:UIControlStateNormal];
 	[btn setImage:btnImgBg forState:UIControlStateSelected];
 	[btn addTarget:self action:@selector(buttonPressed:) forControlEvents:UIControlEventTouchUpInside];
 	[candleChartFreqView addSubview:btn];
-	[btn release];
-	[btnImg release];
-	[btnImgBg release];
 	
 	[self.view addSubview:candleChartFreqView];
 	
@@ -149,7 +133,6 @@
     
     //load securities
 	self.autoCompleteDelegate = [[AutoCompleteDelegate alloc] initWithBar:searchBar];
-	[self.autoCompleteDelegate release];
 	self.autoCompleteView = [[UITableView alloc]initWithFrame:CGRectMake(self.view.frame.size.width-240, 40,240, 0)];
 	self.autoCompleteView.separatorStyle=UITableViewCellSeparatorStyleNone;
 	self.autoCompleteView.showsVerticalScrollIndicator = YES;
@@ -163,8 +146,7 @@
     //load default security data
     searchBar.text = @"深证成指（399001.SZ）";
 	[self searchBarSearchButtonClicked:searchBar];
-	
-	
+
 }
 
 -(void)initChart{
@@ -205,8 +187,6 @@
 	[serie setObject:@"77,143,42" forKey:@"labelNegativeColor"];
 	[series addObject:serie];
 	[secOne addObject:serie];
-	[data release];
-	[serie release];
 	
 	//MA10
 	serie = [[NSMutableDictionary alloc] init]; 
@@ -223,8 +203,6 @@
 	[serie setObject:@"255,255,255" forKey:@"negativeSelectedColor"];
 	[series addObject:serie];
 	[secOne addObject:serie];
-	[data release];
-	[serie release];
     
 	//MA30
 	serie = [[NSMutableDictionary alloc] init]; 
@@ -241,8 +219,6 @@
 	[serie setObject:@"250,232,115" forKey:@"negativeSelectedColor"];
 	[series addObject:serie];
 	[secOne addObject:serie];
-	[data release];
-	[serie release];
 	
 	//MA60
 	serie = [[NSMutableDictionary alloc] init]; 
@@ -259,9 +235,6 @@
 	[serie setObject:@"232,115,250" forKey:@"negativeSelectedColor"];
 	[series addObject:serie];
 	[secOne addObject:serie];
-	[data release];
-	[serie release];
-	
 	
 	//VOL
 	serie = [[NSMutableDictionary alloc] init]; 
@@ -279,43 +252,36 @@
 	[serie setObject:@"77,143,42" forKey:@"negativeSelectedColor"];
 	[series addObject:serie];
 	[secTwo addObject:serie];
-	[data release];
-	[serie release];
 	
 	//candleChart init
     [self.candleChart setSeries:series];
-	[series release];
 	
 	[[[self.candleChart sections] objectAtIndex:0] setSeries:secOne];
-	[secOne release];
 	[[[self.candleChart sections] objectAtIndex:1] setSeries:secTwo];
-	[secTwo release];
 	[[[self.candleChart sections] objectAtIndex:2] setSeries:secThree];
 	[[[self.candleChart sections] objectAtIndex:2] setPaging:YES];
-	[secThree release];
 	
 	
 	NSString *indicatorsString =[NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"indicators" ofType:@"json"] encoding:NSUTF8StringEncoding error:nil];
     
 	if(indicatorsString != nil){
-		NSArray *indicators = [indicatorsString objectFromJSONString];
+        NSArray *indicators = [indicatorsString objectFromJSONString];
 		for(NSObject *indicator in indicators){
 			if([indicator isKindOfClass:[NSArray class]]){
+                NSArray* indicatorArray = (NSArray*)indicator;
 				NSMutableArray *arr = [[NSMutableArray alloc] init];
-				for(NSDictionary *indic in indicator){
+				for(NSDictionary *indic in indicatorArray) {
 					NSMutableDictionary *serie = [[NSMutableDictionary alloc] init]; 
 					[self setOptions:indic ForSerie:serie];
 					[arr addObject:serie];
-					[serie release];
 				}
-			    [self.candleChart addSerie:arr];
-				[arr release];
-			}else{
+                [self.candleChart addSerie:arr];
+			}
+            else{
 				NSDictionary *indic = (NSDictionary *)indicator;
 				NSMutableDictionary *serie = [[NSMutableDictionary alloc] init]; 
 				[self setOptions:indic ForSerie:serie];
 				[self.candleChart addSerie:serie];
-				[serie release];
 			}
 		}
 	}
@@ -324,8 +290,7 @@
     pathAnimation.duration = 10.0;
     pathAnimation.fromValue = [NSNumber numberWithFloat:0.0f];
     pathAnimation.toValue = [NSNumber numberWithFloat:1.0f];
-    [self.candleChart addAnimation:pathAnimation forKey:@"strokeEndAnimation"];
-    
+    [self.candleChart.layer addAnimation:pathAnimation forKey:@"strokeEndAnimation"];
 }
 
 -(void)setOptions:(NSDictionary *)options ForSerie:(NSMutableDictionary *)serie;{
@@ -342,7 +307,7 @@
 
 -(void)buttonPressed:(id)sender{
     UIButton *btn = (UIButton *)sender;
-	int index = btn.tag;
+	NSInteger index = btn.tag;
 	
 	if(index !=2){
 		CGContextRef context = UIGraphicsGetCurrentContext();
@@ -445,7 +410,6 @@
 - (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar{
 	NSMutableArray *data = [self.autoCompleteDelegate.items mutableCopy];
     self.autoCompleteDelegate.selectedItems = data;
-	[data release];
     self.autoCompleteView.hidden = NO;
 	
 	if([self isCodesExpired]){
@@ -527,21 +491,22 @@
 	NSLog(@"url:%@",reqURL);
 
     NSURL *url = [NSURL URLWithString:[reqURL stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-	[reqURL release];
-	
-	ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
-	[request setTimeOutSeconds:5];
-	[request setDelegate:self];
-	[request startAsynchronous];
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL: url cachePolicy: NSURLRequestUseProtocolCachePolicy timeoutInterval:5];
+    [request setHTTPMethod: @"POST"];
+    [request setValue:@"Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.2; .NET CLR 1.0.3705;)" forHTTPHeaderField:@"user-agent"];
+    [NSURLConnection sendAsynchronousRequest: request
+                                       queue: [NSOperationQueue currentQueue]
+                           completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
+                               [self performSelector:@selector(requestFinished:error:) withObject:data withObject:connectionError];
+                           }];
 }
 
-- (void)requestFinished:(ASIHTTPRequest *)request
-{
+- (void)requestFinished: (NSData*)responseData error: (NSError*)error {
 	self.status.text = @"";
     NSMutableArray *data =[[NSMutableArray alloc] init];
 	NSMutableArray *category =[[NSMutableArray alloc] init];
 
-    NSString *content = [request responseString];
+    NSString *content = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
     NSArray *lines = [content componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
     NSInteger idx;    
     for (idx = lines.count-1; idx > 0; idx--) {
@@ -559,7 +524,6 @@
         [item addObject:[arr objectAtIndex:3]];
         [item addObject:[arr objectAtIndex:5]];
         [data addObject:item];
-        [item release];
     }
     
 	if(data.count==0){
@@ -610,7 +574,6 @@
 	NSMutableDictionary *dic = [[NSMutableDictionary alloc] init];
 	[self generateData:dic From:data];
 	[self setData:dic];
-	[dic release];
 	
 	if(chartMode == 0){
 		[self setCategory:category];
@@ -620,7 +583,6 @@
 			[cate addObject:[category objectAtIndex:i]];
 		}
 	    [self setCategory:cate];
-		[cate release];
 	}
 	
 	[self.candleChart setNeedsDisplay];
@@ -634,7 +596,6 @@
 			[price addObject: [data objectAtIndex:i]];
 		}
 		[dic setObject:price forKey:@"price"];
-		[price release];
 		
 		//VOL
 		NSMutableArray *vol = [[NSMutableArray alloc] init];
@@ -642,10 +603,8 @@
 			NSMutableArray *item = [[NSMutableArray alloc] init];
 			[item addObject:[@"" stringByAppendingFormat:@"%f",[[[data objectAtIndex:i] objectAtIndex:4] floatValue]/100]];
 			[vol addObject:item];
-			[item release];
 		}
 		[dic setObject:vol forKey:@"vol"];
-		[vol release];
 		
 		//MA 10
 		NSMutableArray *ma10 = [[NSMutableArray alloc] init];
@@ -658,10 +617,8 @@
 			NSMutableArray *item = [[NSMutableArray alloc] init];
 			[item addObject:[@"" stringByAppendingFormat:@"%f",val]];
 			[ma10 addObject:item];
-			[item release];
 		}
 		[dic setObject:ma10 forKey:@"ma10"];
-		[ma10 release];
 		
 		//MA 30
 		NSMutableArray *ma30 = [[NSMutableArray alloc] init];
@@ -674,10 +631,8 @@
 			NSMutableArray *item = [[NSMutableArray alloc] init];
 			[item addObject:[@"" stringByAppendingFormat:@"%f",val]];
 			[ma30 addObject:item];
-			[item release];
 		}
 		[dic setObject:ma30 forKey:@"ma30"];
-		[ma30 release];
 		
 		//MA 60
 		NSMutableArray *ma60 = [[NSMutableArray alloc] init];
@@ -690,10 +645,8 @@
 			NSMutableArray *item = [[NSMutableArray alloc] init];
 			[item addObject:[@"" stringByAppendingFormat:@"%f",val]];
 			[ma60 addObject:item];
-			[item release];
 		}
 		[dic setObject:ma60 forKey:@"ma60"];
-		[ma60 release];
 
 		//RSI6
 		NSMutableArray *rsi6 = [[NSMutableArray alloc] init];
@@ -716,11 +669,8 @@
 			NSMutableArray *item = [[NSMutableArray alloc] init];
 			[item addObject:[@"" stringByAppendingFormat:@"%f",rsi]];
 			[rsi6 addObject:item];
-			[item release];
-			
 		}
 		[dic setObject:rsi6 forKey:@"rsi6"];
-		[rsi6 release];
 		
 		//RSI12
 		NSMutableArray *rsi12 = [[NSMutableArray alloc] init];
@@ -743,10 +693,8 @@
 			NSMutableArray *item = [[NSMutableArray alloc] init];
 			[item addObject:[@"" stringByAppendingFormat:@"%f",rsi]];
 			[rsi12 addObject:item];
-			[item release];
 		}
 		[dic setObject:rsi12 forKey:@"rsi12"];
-		[rsi12 release];
 		
 		//WR
 		NSMutableArray *wr = [[NSMutableArray alloc] init];
@@ -768,10 +716,8 @@
 			NSMutableArray *item = [[NSMutableArray alloc] init];
 			[item addObject:[@"" stringByAppendingFormat:@"%f",val]];
 			[wr addObject:item];
-			[item release];
 		}
 		[dic setObject:wr forKey:@"wr"];
-		[wr release];
 		
 		//KDJ
 		NSMutableArray *kdj_k = [[NSMutableArray alloc] init];
@@ -806,22 +752,16 @@
 			NSMutableArray *itemK = [[NSMutableArray alloc] init];
 			[itemK addObject:[@"" stringByAppendingFormat:@"%f",k]];
 			[kdj_k addObject:itemK];
-			[itemK release];
 			NSMutableArray *itemD = [[NSMutableArray alloc] init];
 			[itemD addObject:[@"" stringByAppendingFormat:@"%f",d]];
 			[kdj_d addObject:itemD];
-			[itemD release];
 			NSMutableArray *itemJ = [[NSMutableArray alloc] init];
 			[itemJ addObject:[@"" stringByAppendingFormat:@"%f",j]];
 			[kdj_j addObject:itemJ];
-			[itemJ release];
 		}
 		[dic setObject:kdj_k forKey:@"kdj_k"];
 		[dic setObject:kdj_d forKey:@"kdj_d"];
 		[dic setObject:kdj_j forKey:@"kdj_j"];
-		[kdj_k release];
-		[kdj_d release];
-		[kdj_j release];
 		
 		//VR
 		NSMutableArray *vr = [[NSMutableArray alloc] init];
@@ -846,19 +786,17 @@
 			NSMutableArray *item = [[NSMutableArray alloc] init];
 			[item addObject:[@"" stringByAppendingFormat:@"%f",val]];
 			[vr addObject:item];
-			[item release];
 		}
 		[dic setObject:vr forKey:@"vr"];
-		[vr release];
 
-	}else{
+	}
+    else{
 		//price 
 		NSMutableArray *price = [[NSMutableArray alloc] init];
 	    for(int i = 0;i < data.count;i++){
 			[price addObject: [data objectAtIndex:i]];
 		}
 		[dic setObject:price forKey:@"price"];
-		[price release];
 		
 		//VOL
 		NSMutableArray *vol = [[NSMutableArray alloc] init];
@@ -866,11 +804,8 @@
 			NSMutableArray *item = [[NSMutableArray alloc] init];
 			[item addObject:[@"" stringByAppendingFormat:@"%f",[[[data objectAtIndex:i] objectAtIndex:4] floatValue]/100]];
 			[vol addObject:item];
-			[item release];
 		}
 		[dic setObject:vol forKey:@"vol"];
-		[vol release];
-		
 	}
 }
 
@@ -908,12 +843,16 @@
 	
 }
 
-- (void)requestFailed:(ASIHTTPRequest *)request{
-	self.status.text = @"Error!";
+- (BOOL)shouldAutorotate {
+    return YES;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-	return (interfaceOrientation == UIInterfaceOrientationLandscapeRight || interfaceOrientation == UIInterfaceOrientationLandscapeLeft);
+    return UIInterfaceOrientationIsLandscape(interfaceOrientation);
+}
+
+- (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation {
+    return UIInterfaceOrientationLandscapeLeft;
 }
 
 - (void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation duration:(NSTimeInterval)duration{
@@ -933,20 +872,18 @@
 }
 
 - (void)dealloc {
-    [super dealloc];
-	[candleChart release];
-	[autoCompleteView release];
-	[toolBar release];
-	[candleChartFreqView release];
-	[autoCompleteDelegate release];
-	[req_security_id release];
-	[timer release];
-	[lastTime release];
-	[status release];
-	[req_freq release];
-	[req_type release];
-	[req_url release];
-	[req_security_id release];
+    candleChart = nil;
+    autoCompleteView = nil;
+    toolBar = nil;
+    candleChartFreqView = nil;
+    autoCompleteDelegate = nil;
+    timer = nil;
+    lastTime = nil;
+    status = nil;
+    req_freq = nil;
+    req_type = nil;
+    req_url = nil;
+    req_security_id = nil;
 }
 
 @end

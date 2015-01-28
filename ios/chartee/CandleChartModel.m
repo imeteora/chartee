@@ -182,21 +182,17 @@
         NSMutableString *l = [[NSMutableString alloc] init];
         [l appendFormat:@"Open:%.2f",open];
         [tmp setObject:l forKey:@"text"];
-        [l release];
         NSMutableString *clr = [[NSMutableString alloc] init];
         [clr appendFormat:@"%f,",ZR];
         [clr appendFormat:@"%f,",ZG];
         [clr appendFormat:@"%f",ZB];
         [tmp setObject:clr forKey:@"color"];
-        [clr release];
         [label addObject:tmp];
-        [tmp release];
         
         tmp = [[NSMutableDictionary alloc] init];
         l = [[NSMutableString alloc] init];
         [l appendFormat:@"Close:%.2f",close];
         [tmp setObject:l forKey:@"text"];
-        [l release];
         clr = [[NSMutableString alloc] init];
         if(close>open){
             [clr appendFormat:@"%f,",R];
@@ -212,35 +208,30 @@
             [clr appendFormat:@"%f",ZB];
         }
         [tmp setObject:clr forKey:@"color"];
-        [clr release];
         [label addObject:tmp];
-        [tmp release];
         
         tmp = [[NSMutableDictionary alloc] init];
         l = [[NSMutableString alloc] init];
         [l appendFormat:@"High:%.2f",high];
         [tmp setObject:l forKey:@"text"];
-        [l release];
         clr = [[NSMutableString alloc] init];
         if(high>open){
             [clr appendFormat:@"%f,",R];
             [clr appendFormat:@"%f,",G];
             [clr appendFormat:@"%f",B];
-        }else{
+        }
+        else {
             [clr appendFormat:@"%f,",ZR];
             [clr appendFormat:@"%f,",ZG];
             [clr appendFormat:@"%f",ZB];
         }
         [tmp setObject:clr forKey:@"color"];
-        [clr release];
         [label addObject:tmp];
-        [tmp release];
         
         tmp = [[NSMutableDictionary alloc] init];
         l = [[NSMutableString alloc] init];
         [l appendFormat:@"Low:%.2f ",low];
         [tmp setObject:l forKey:@"text"];
-        [l release];
         clr = [[NSMutableString alloc] init];
         if(low>open){
             [clr appendFormat:@"%f,",R];
@@ -257,16 +248,12 @@
         }
         
         [tmp setObject:clr forKey:@"color"];
-        [clr release];
         [label addObject:tmp];
-        [tmp release];
-        
         
         tmp = [[NSMutableDictionary alloc] init];
         l = [[NSMutableString alloc] init];
         [l appendFormat:@"Change:%.2f%@  ",inc,@"%"];
         [tmp setObject:l forKey:@"text"];
-        [l release];
         clr = [[NSMutableString alloc] init];
         if(inc > 0){
             [clr appendFormat:@"%f,",R];
@@ -283,12 +270,8 @@
         }
         
         [tmp setObject:clr forKey:@"color"];
-        [clr release];
         [label addObject:tmp];
-        [tmp release];
-        
     }
-
 }
 
 -(void)drawTips:(Chart *)chart serie:(NSMutableDictionary *)serie{

@@ -102,18 +102,20 @@
 		if(sec.paging){
 			NSObject *serie = [[sec series] objectAtIndex:sec.selectedIndex];
 			if([serie isKindOfClass:[NSArray class]]){
-				for(int i=0;i<[serie count];i++){
-					[self setValuesForYAxis:[serie objectAtIndex:i]];
+				for(int i=0;i<[(NSArray*)serie count];i++){
+					[self setValuesForYAxis:[(NSArray*)serie objectAtIndex:i]];
 				}
-			}else {
+			}
+            else {
 				[self setValuesForYAxis:serie];
 			}
-		}else{
+		}
+        else {
 			for(int sIndex=0;sIndex<[sec.series count];sIndex++){
 				NSObject *serie = [[sec series] objectAtIndex:sIndex];
 				if([serie isKindOfClass:[NSArray class]]){
-					for(int i=0;i<[serie count];i++){
-						[self setValuesForYAxis:[serie objectAtIndex:i]];
+					for(int i=0;i<[(NSArray*)serie count];i++){
+						[self setValuesForYAxis:[(NSArray*)serie objectAtIndex:i]];
 					}
 				}else {
 					[self setValuesForYAxis:serie];
@@ -184,8 +186,8 @@
 			if(sec.paging){
 				if (sec.selectedIndex == sIndex) {
 					if([serie isKindOfClass:[NSArray class]]){
-						for(int i=0;i<[serie count];i++){
-							[self drawSerie:[serie objectAtIndex:i]];
+						for(int i=0;i<[(NSArray*)serie count];i++){
+							[self drawSerie:[(NSArray*)serie objectAtIndex:i]];
 						}
 					}else{
 						[self drawSerie:serie];
@@ -194,8 +196,8 @@
 				}
 			}else{
 				if([serie isKindOfClass:[NSArray class]]){
-					for(int i=0;i<[serie count];i++){
-						[self drawSerie:[serie objectAtIndex:i]];
+					for(int i=0;i<[(NSArray*)serie count];i++){
+						[self drawSerie:[(NSArray*)serie objectAtIndex:i]];
 					}
 				}else{
 					[self drawSerie:serie];
@@ -221,8 +223,8 @@
 			if(sec.paging){
 				if (sec.selectedIndex == s) {
 					if([serie isKindOfClass:[NSArray class]]){
-						for(int i=0;i<[serie count];i++){
-							[self setLabel:label forSerie:[serie objectAtIndex:i]];
+						for(int i=0;i<[(NSArray*)serie count];i++){
+							[self setLabel:label forSerie:[(NSArray*)serie objectAtIndex:i]];
 						}
 					}else{
 						[self setLabel:label forSerie:serie];
@@ -230,8 +232,8 @@
 				}
 			}else{
 				if([serie isKindOfClass:[NSArray class]]){
-					for(int i=0;i<[serie count];i++){
-						[self setLabel:label forSerie:[serie objectAtIndex:i]];
+					for(int i=0;i<[(NSArray*)serie count];i++){
+						[self setLabel:label forSerie:[(NSArray*)serie objectAtIndex:i]];
 					}
 				}else{
 					[self setLabel:label forSerie:serie];
@@ -248,7 +250,6 @@
 				[text drawAtPoint:CGPointMake(sec.frame.origin.x+sec.paddingLeft+2+w,sec.frame.origin.y) withFont:[UIFont systemFontOfSize: 14]];
 				w += [text sizeWithFont:[UIFont systemFontOfSize:14]].width;
 			}
-			[label release];
 		}
 	}
 }
@@ -304,8 +305,8 @@
 			
 			float baseY = [self getLocalY:yaxis.baseValue withSection:secIndex withAxis:aIndex];
 			CGContextSetStrokeColorWithColor(context, [[UIColor alloc] initWithRed:0.2 green:0.2 blue:0.2 alpha:1.0].CGColor);
-			CGContextMoveToPoint(context,sec.frame.origin.x+sec.paddingLeft,baseY);
             if(!isnan(baseY)){
+                CGContextMoveToPoint(context,sec.frame.origin.x+sec.paddingLeft,baseY);
                 CGContextAddLineToPoint(context, sec.frame.origin.x+sec.paddingLeft-2, baseY);
             }
             CGContextStrokePath(context);
@@ -313,8 +314,8 @@
 			[[@"" stringByAppendingFormat:format,yaxis.baseValue] drawAtPoint:CGPointMake(sec.frame.origin.x-1,baseY-7) withFont:[UIFont systemFontOfSize: 12]];
 			
 			CGContextSetStrokeColorWithColor(context, [[UIColor alloc] initWithRed:0.15 green:0.15 blue:0.15 alpha:1.0].CGColor);
-			CGContextMoveToPoint(context,sec.frame.origin.x+sec.paddingLeft,baseY);
-			if(!isnan(baseY)){
+			if(!isnan(baseY)) {
+                CGContextMoveToPoint(context,sec.frame.origin.x+sec.paddingLeft,baseY);
                 CGContextAddLineToPoint(context,sec.frame.origin.x+sec.frame.size.width,baseY);
             }
             
@@ -328,8 +329,8 @@
 					float iy = [self getLocalY:(yaxis.baseValue + i*step) withSection:secIndex withAxis:aIndex];
 					
 					CGContextSetStrokeColorWithColor(context, [[UIColor alloc] initWithRed:0.2 green:0.2 blue:0.2 alpha:1.0].CGColor);
-					CGContextMoveToPoint(context,sec.frame.origin.x+sec.paddingLeft,iy);
 					if(!isnan(iy)){
+                        CGContextMoveToPoint(context,sec.frame.origin.x+sec.paddingLeft,iy);
                         CGContextAddLineToPoint(context,sec.frame.origin.x+sec.paddingLeft-2,iy);
 					}
                     CGContextStrokePath(context);
@@ -350,8 +351,8 @@
 					float iy = [self getLocalY:(yaxis.baseValue - i*step) withSection:secIndex withAxis:aIndex];
 					
 					CGContextSetStrokeColorWithColor(context, [[UIColor alloc] initWithRed:0.2 green:0.2 blue:0.2 alpha:1.0].CGColor);
-					CGContextMoveToPoint(context,sec.frame.origin.x+sec.paddingLeft,iy);
 					if(!isnan(iy)){
+                        CGContextMoveToPoint(context,sec.frame.origin.x+sec.paddingLeft,iy);
                         CGContextAddLineToPoint(context,sec.frame.origin.x+sec.paddingLeft-2,iy);
 					}
                     CGContextStrokePath(context);
@@ -416,7 +417,6 @@
 			if([[self.series objectAtIndex:i] objectForKey:@"data"] == nil){
 				NSMutableArray *tempData = [[NSMutableArray alloc] init];
 			    [[self.series objectAtIndex:i] setObject:tempData forKey:@"data"];
-				[tempData release];
 			}
 			
 			for(int j=0;j<data.count;j++){
@@ -456,7 +456,6 @@
 			if([[self.series objectAtIndex:i] objectForKey:@"category"] == nil){
 				NSMutableArray *tempData = [[NSMutableArray alloc] init];
 			    [[self.series objectAtIndex:i] setObject:tempData forKey:@"category"];
-				[tempData release];
 			}
 			
 			for(int j=0;j<category.count;j++){
@@ -523,13 +522,14 @@
 -(void)addSerie:(NSObject *)serie{
 	if([serie isKindOfClass:[NSArray class]]){
 		int section = 0;
-	    for (NSDictionary *ser in serie) {
+	    for (NSDictionary *ser in (NSArray*)serie) {
 		    section = [[ser objectForKey:@"section"] intValue];
 			[self.series addObject:ser];
 		}
 		[[[self.sections objectAtIndex:section] series] addObject:serie];
-	}else{
-		int section = [[serie objectForKey:@"section"] intValue];
+	}
+    else{
+		int section = [((NSDictionary*)serie)[@"section"] intValue];
 		[self.series addObject:serie];
 		[[[self.sections objectAtIndex:section] series] addObject:serie];
 	}
@@ -539,12 +539,9 @@
  *  Chart Sections
  */ 
 -(void)addSection:(NSString *)ratio{
-	[ratio retain];
 	Section *sec = [[Section alloc] init];
     [self.sections addObject:sec];
-	[sec release];
 	[self.ratios addObject:ratio];
-	[ratio release];
 }
 
 -(void)removeSection:(int)index{
@@ -553,14 +550,11 @@
 }
 
 -(void)addSections:(int)num withRatios:(NSArray *)rats{
-	[rats retain];
 	for (int i=0; i< num; i++) {
 		Section *sec = [[Section alloc] init];
 		[self.sections addObject:sec];
-		[sec release];	
 		[self.ratios addObject:[rats objectAtIndex:i]];
 	}
-	[rats release];
 }
 
 -(void)removeSections{
@@ -634,16 +628,13 @@
 		self.touchFlag       = 0;
 		self.touchFlagTwo    = 0;
 		NSMutableArray *rats = [[NSMutableArray alloc] init];
-		self.ratios          = rats; 
-		[rats release];
+		self.ratios          = rats;
 		
 		NSMutableArray *secs = [[NSMutableArray alloc] init];
-		self.sections        = secs; 
-		[secs release];
+		self.sections        = secs;
         
         NSMutableDictionary *mods = [[NSMutableDictionary alloc] init];
-		self.models        = mods; 
-		[mods release];
+		self.models        = mods;
 		
 		[self setMultipleTouchEnabled:YES];
         
@@ -657,22 +648,18 @@
     //line
     ChartModel *model = [[LineChartModel alloc] init];
     [self addModel:model withName:@"line"];
-    [model release];
     
     //area
     model = [[AreaChartModel alloc] init];
     [self addModel:model withName:@"area"];
-    [model release];
     
     //column
     model = [[ColumnChartModel alloc] init];
     [self addModel:model withName:@"column"];
-    [model release];
     
     //candle
     model = [[CandleChartModel alloc] init];
     [self addModel:model withName:@"candle"];
-    [model release];
 
 }
 
@@ -695,13 +682,12 @@
 }
 
 - (void)dealloc {
-      [borderColor release];	
-      [padding release];
-      [series release];
-      [title release];
-      [sections release];
-      [ratios release];
-      [super dealloc];
+    borderColor = nil;
+    padding = nil;
+    series = nil;
+    title = nil;
+    sections = nil;
+    ratios = nil;
 }
 
 #pragma mark -

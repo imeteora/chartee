@@ -14,7 +14,8 @@
 	double now = [dt timeIntervalSince1970];
     NSMutableString *expiresString = [[NSMutableString alloc] init];
 	NSData *dataExpires = [[expiresString stringByAppendingFormat:@"%f",now+expires] dataUsingEncoding:NSUTF8StringEncoding];
-	[expiresString release];
+    expiresString = nil;
+    
 	[dataExpires writeToFile:[[self getTempPath:key] stringByAppendingFormat:@"%@",@".expires"] atomically:NO];
     [data writeToFile:[self getTempPath:key] atomically:NO];
 }
@@ -46,16 +47,10 @@
 + (BOOL)isExpired:(NSString *) key{
 	NSData *data = [NSData dataWithContentsOfFile:[key stringByAppendingFormat:@"%@",@".expires"]];
 	NSString *expires = [[NSString alloc] initWithData:data  encoding:NSUTF8StringEncoding];
-	double exp = [expires doubleValue];
-	[expires release];
-	NSDate *dt = [NSDate date];
-	double value = [dt timeIntervalSince1970];
-	
-	if(exp > value){
-		
-		return NO;
-	}
-	return YES;
+	CGFloat exp = [expires doubleValue];
+    expires = nil;
+    
+    return !(exp > [[NSDate date] timeIntervalSince1970]);
 }
 
 @end

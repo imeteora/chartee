@@ -10,7 +10,7 @@
 
 +(UIImage *) loadImageByTheme:(NSString *) name{
 	NSString *path = [[NSBundle mainBundle] pathForResource:[((NSString *)[ResourceHelper  getUserDefaults:@"theme"]) stringByAppendingFormat:@"_%@",name] ofType:@"png"];
-	return [[[UIImage alloc] initWithContentsOfFile:path] autorelease];
+	return [[UIImage alloc] initWithContentsOfFile:path];
 	
 }
 
@@ -22,9 +22,9 @@
         realName = [[NSString alloc] initWithFormat:@"phone_%@",name];
     }
 	NSString *path = [[NSBundle mainBundle] pathForResource:realName ofType:@"png"];
-    [realName release];
+    realName = nil;
     
-	return [[[UIImage alloc] initWithContentsOfFile:path] autorelease];
+	return [[UIImage alloc] initWithContentsOfFile:path];
 }
 
 +(NSObject *) getUserDefaults:(NSString *) name{
