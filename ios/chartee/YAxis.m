@@ -23,7 +23,7 @@
 @synthesize pos;
 @synthesize decimal;
 
-- (id)init{
+- (instancetype)init{
 	self = [super init];
     if (self) {
 		[self reset];

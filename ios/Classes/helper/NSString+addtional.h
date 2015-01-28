@@ -9,6 +9,6 @@
 #import <Foundation/Foundation.h>
 
 @interface NSString (addtional)
-- (id) objectFromJSONString;
-- (id) mutableObjectFromJSONString;
+@property (NS_NONATOMIC_IOSONLY, readonly, strong) id objectFromJSONString;
+@property (NS_NONATOMIC_IOSONLY, readonly, strong) id mutableObjectFromJSONString;
 @end

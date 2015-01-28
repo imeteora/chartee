@@ -16,5 +16,5 @@
 @property (nonatomic, retain) NSMutableArray * selectedItems;
 @property (nonatomic, retain) UISearchBar *searchBar;
 
-- (id)initWithBar:(UISearchBar *) bar;
+- (instancetype)initWithBar:(UISearchBar *) bar NS_DESIGNATED_INITIALIZER;
 @end

@@ -48,7 +48,7 @@
 -(void)generateData:(NSMutableDictionary *)dic From:(NSArray *)data;
 -(void)setData:(NSDictionary *)dic;
 -(void)setCategory:(NSArray *)category;
--(BOOL)isCodesExpired;
+@property (NS_NONATOMIC_IOSONLY, getter=isCodesExpired, readonly) BOOL codesExpired;
 -(void)getAutoCompleteData;
 -(void)setOptions:(NSDictionary *)options ForSerie:(NSMutableDictionary *)serie;
 

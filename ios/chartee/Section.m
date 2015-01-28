@@ -44,7 +44,7 @@
 
 -(void)initYAxises{
     for(int i=0;i<[self.yAxises count];i++){
-	    [[self.yAxises objectAtIndex:i] setIsUsed:NO];
+	    [(self.yAxises)[i] setIsUsed:NO];
 	}
 }
 
@@ -57,7 +57,7 @@
 	[self initYAxises];
 }
 
-- (id)init{
+- (instancetype)init{
 	self = [super init];
     if (self) {
 		self.hidden          = NO;

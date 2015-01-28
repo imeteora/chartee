@@ -38,8 +38,8 @@
 @synthesize title;
 
 -(float)getLocalY:(float)val withSection:(int)sectionIndex withAxis:(int)yAxisIndex{
-	Section *sec = [[self sections] objectAtIndex:sectionIndex];
-	YAxis *yaxis = [sec.yAxises objectAtIndex:yAxisIndex];
+	Section *sec = [self sections][sectionIndex];
+	YAxis *yaxis = (sec.yAxises)[yAxisIndex];
 	CGRect fra = sec.frame;
 	float  max = yaxis.max;
 	float  min = yaxis.min;
@@ -50,14 +50,14 @@
 	if(!self.isInitialized){
 		self.plotPadding = 1.f;
 		if(self.padding != nil){
-			self.paddingTop    = [[self.padding objectAtIndex:0] floatValue];
-			self.paddingRight  = [[self.padding objectAtIndex:1] floatValue];
-			self.paddingBottom = [[self.padding objectAtIndex:2] floatValue];
-			self.paddingLeft   = [[self.padding objectAtIndex:3] floatValue];
+			self.paddingTop    = [(self.padding)[0] floatValue];
+			self.paddingRight  = [(self.padding)[1] floatValue];
+			self.paddingBottom = [(self.padding)[2] floatValue];
+			self.paddingLeft   = [(self.padding)[3] floatValue];
 		}
 		
 		if(self.series!=nil){
-			self.rangeTo = [[[[self series] objectAtIndex:0] objectForKey:@"data"] count];
+			self.rangeTo = [[self series][0][@"data"] count];
 			if(rangeTo-range >= 0){
 				self.rangeFrom = rangeTo-range;
 			}else{
@@ -72,7 +72,7 @@
 	}
 
 	if(self.series!=nil){
-		self.plotCount = [[[[self series] objectAtIndex:0] objectForKey:@"data"] count];
+		self.plotCount = [[self series][0][@"data"] count];
 	}
     
     CGContextRef context = UIGraphicsGetCurrentContext();
@@ -90,20 +90,20 @@
 
 - (void)initYAxis{
 	for(int secIndex=0;secIndex<[self.sections count];secIndex++){
-		Section *sec = [self.sections objectAtIndex:secIndex];
+		Section *sec = (self.sections)[secIndex];
 		for(int sIndex=0;sIndex<[sec.yAxises count];sIndex++){
-			YAxis *yaxis = [sec.yAxises objectAtIndex:sIndex];
+			YAxis *yaxis = (sec.yAxises)[sIndex];
 			yaxis.isUsed = NO;
 		}
 	}
 	
 	for(int secIndex=0;secIndex<[self.sections count];secIndex++){
-		Section *sec = [self.sections objectAtIndex:secIndex];
+		Section *sec = (self.sections)[secIndex];
 		if(sec.paging){
-			NSObject *serie = [[sec series] objectAtIndex:sec.selectedIndex];
+			NSObject *serie = [sec series][sec.selectedIndex];
 			if([serie isKindOfClass:[NSArray class]]){
 				for(int i=0;i<[(NSArray*)serie count];i++){
-					[self setValuesForYAxis:[(NSArray*)serie objectAtIndex:i]];
+					[self setValuesForYAxis:((NSArray*)serie)[i]];
 				}
 			}
             else {
@@ -112,10 +112,10 @@
 		}
         else {
 			for(int sIndex=0;sIndex<[sec.series count];sIndex++){
-				NSObject *serie = [[sec series] objectAtIndex:sIndex];
+				NSObject *serie = [sec series][sIndex];
 				if([serie isKindOfClass:[NSArray class]]){
 					for(int i=0;i<[(NSArray*)serie count];i++){
-						[self setValuesForYAxis:[(NSArray*)serie objectAtIndex:i]];
+						[self setValuesForYAxis:((NSArray*)serie)[i]];
 					}
 				}else {
 					[self setValuesForYAxis:serie];
@@ -124,7 +124,7 @@
 		}
 		
 		for(int i = 0;i<sec.yAxises.count;i++){
-			YAxis *yaxis = [sec.yAxises objectAtIndex:i];
+			YAxis *yaxis = (sec.yAxises)[i];
 			yaxis.max += (yaxis.max-yaxis.min)*yaxis.ext;
 			yaxis.min -= (yaxis.max-yaxis.min)*yaxis.ext;
 			
@@ -164,20 +164,20 @@
 }
 
 -(void)setValuesForYAxis:(NSDictionary *)serie{
-    NSString   *type  = [serie objectForKey:@"type"];
+    NSString   *type  = serie[@"type"];
     ChartModel *model = [self getModel:type];
     [model setValuesForYAxis:self serie:serie];	
 }
 
 -(void)drawChart{
     for(int secIndex=0;secIndex<self.sections.count;secIndex++){
-		Section *sec = [self.sections objectAtIndex:secIndex];
+		Section *sec = (self.sections)[secIndex];
 		if(sec.hidden){
 		    continue;
 		}
 		plotWidth = (sec.frame.size.width-sec.paddingLeft)/(self.rangeTo-self.rangeFrom);
 		for(int sIndex=0;sIndex<sec.series.count;sIndex++){
-			NSObject *serie = [sec.series objectAtIndex:sIndex];
+			NSObject *serie = (sec.series)[sIndex];
 			
 			if(sec.hidden){
 				continue;
@@ -187,7 +187,7 @@
 				if (sec.selectedIndex == sIndex) {
 					if([serie isKindOfClass:[NSArray class]]){
 						for(int i=0;i<[(NSArray*)serie count];i++){
-							[self drawSerie:[(NSArray*)serie objectAtIndex:i]];
+							[self drawSerie:((NSArray*)serie)[i]];
 						}
 					}else{
 						[self drawSerie:serie];
@@ -197,7 +197,7 @@
 			}else{
 				if([serie isKindOfClass:[NSArray class]]){
 					for(int i=0;i<[(NSArray*)serie count];i++){
-						[self drawSerie:[(NSArray*)serie objectAtIndex:i]];
+						[self drawSerie:((NSArray*)serie)[i]];
 					}
 				}else{
 					[self drawSerie:serie];
@@ -210,7 +210,7 @@
 
 -(void)drawLabels{
 	for(int i=0;i<self.sections.count;i++){
-		Section *sec = [self.sections objectAtIndex:i];
+		Section *sec = (self.sections)[i];
 		if(sec.hidden){
 		    continue;
 		}
@@ -218,13 +218,13 @@
 		float w = 0;
 		for(int s=0;s<sec.series.count;s++){
 			NSMutableArray *label =[[NSMutableArray alloc] init];
-		    NSObject *serie = [sec.series objectAtIndex:s];
+		    NSObject *serie = (sec.series)[s];
 			
 			if(sec.paging){
 				if (sec.selectedIndex == s) {
 					if([serie isKindOfClass:[NSArray class]]){
 						for(int i=0;i<[(NSArray*)serie count];i++){
-							[self setLabel:label forSerie:[(NSArray*)serie objectAtIndex:i]];
+							[self setLabel:label forSerie:((NSArray*)serie)[i]];
 						}
 					}else{
 						[self setLabel:label forSerie:serie];
@@ -233,20 +233,20 @@
 			}else{
 				if([serie isKindOfClass:[NSArray class]]){
 					for(int i=0;i<[(NSArray*)serie count];i++){
-						[self setLabel:label forSerie:[(NSArray*)serie objectAtIndex:i]];
+						[self setLabel:label forSerie:((NSArray*)serie)[i]];
 					}
 				}else{
 					[self setLabel:label forSerie:serie];
 				}
 			}	
 			for(int j=0;j<label.count;j++){
-				NSMutableDictionary *lbl = [label objectAtIndex:j];
-				NSString *text  = [lbl objectForKey:@"text"];
-				NSString *color = [lbl objectForKey:@"color"];
+				NSMutableDictionary *lbl = label[j];
+				NSString *text  = lbl[@"text"];
+				NSString *color = lbl[@"color"];
 				NSArray *colors = [color componentsSeparatedByString:@","];
 				CGContextRef context = UIGraphicsGetCurrentContext();
 				CGContextSetShouldAntialias(context, YES);
-				CGContextSetRGBFillColor(context, [[colors objectAtIndex:0] floatValue], [[colors objectAtIndex:1] floatValue], [[colors objectAtIndex:2] floatValue], 1.0);
+				CGContextSetRGBFillColor(context, [colors[0] floatValue], [colors[1] floatValue], [colors[2] floatValue], 1.0);
 				[text drawAtPoint:CGPointMake(sec.frame.origin.x+sec.paddingLeft+2+w,sec.frame.origin.y) withFont:[UIFont systemFontOfSize: 14]];
 				w += [text sizeWithFont:[UIFont systemFontOfSize:14]].width;
 			}
@@ -255,20 +255,20 @@
 }
 
 -(void)setLabel:(NSMutableArray *)label forSerie:(NSMutableDictionary *) serie{
-	NSString   *type  = [serie objectForKey:@"type"];
+	NSString   *type  = serie[@"type"];
     ChartModel *model = [self getModel:type];
     [model setLabel:self label:label forSerie:serie];		
 }
 
 -(void)drawSerie:(NSMutableDictionary *)serie{
-    NSString   *type  = [serie objectForKey:@"type"];
+    NSString   *type  = serie[@"type"];
     ChartModel *model = [self getModel:type];
     [model drawSerie:self serie:serie];	
     
     NSEnumerator *enumerator = [self.models keyEnumerator];  
     id key;  
     while ((key = [enumerator nextObject])){  
-        ChartModel *m = [self.models objectForKey:key];
+        ChartModel *m = (self.models)[key];
         [m drawTips:self serie:serie];
     }
 }
@@ -279,7 +279,7 @@
 	CGContextSetLineWidth(context, 1.0f);
 	
 	for(int secIndex=0;secIndex<[self.sections count];secIndex++){
-		Section *sec = [self.sections objectAtIndex:secIndex];
+		Section *sec = (self.sections)[secIndex];
 		if(sec.hidden){
 			continue;
 		}
@@ -295,12 +295,12 @@
 	CGContextSetLineDash (context,0,dash,1);  
 
 	for(int secIndex=0;secIndex<self.sections.count;secIndex++){
-		Section *sec = [self.sections objectAtIndex:secIndex];
+		Section *sec = (self.sections)[secIndex];
 		if(sec.hidden){
 			continue;
 		}
 		for(int aIndex=0;aIndex<sec.yAxises.count;aIndex++){
-			YAxis *yaxis = [sec.yAxises objectAtIndex:aIndex];
+			YAxis *yaxis = (sec.yAxises)[aIndex];
 			NSString *format=[@"%." stringByAppendingFormat:@"%df",yaxis.decimal];
 			
 			float baseY = [self getLocalY:yaxis.baseValue withSection:secIndex withAxis:aIndex];
@@ -379,7 +379,7 @@
 	CGContextSetLineWidth(context, 1.f);
 	CGContextSetStrokeColorWithColor(context, [[UIColor alloc] initWithRed:0.2 green:0.2 blue:0.2 alpha:1.0].CGColor);
 	for(int secIndex=0;secIndex<self.sections.count;secIndex++){
-		Section *sec = [self.sections objectAtIndex:secIndex];
+		Section *sec = (self.sections)[secIndex];
 		if(sec.hidden){
 			continue;
 		}
@@ -397,7 +397,7 @@
 	if([self getIndexOfSection:point] == -1){
 		return;
 	}
-	Section *sec = [self.sections objectAtIndex:[self getIndexOfSection:point]];
+	Section *sec = (self.sections)[[self getIndexOfSection:point]];
 	
 	for(int i=self.rangeFrom;i<self.rangeTo;i++){
 		if((plotWidth*(i-self.rangeFrom))<=(point.x-sec.paddingLeft-self.paddingLeft) && (point.x-sec.paddingLeft-self.paddingLeft)<plotWidth*((i-self.rangeFrom)+1)){
@@ -413,14 +413,14 @@
 
 -(void)appendToData:(NSArray *)data forName:(NSString *)name{
     for(int i=0;i<self.series.count;i++){
-		if([[[self.series objectAtIndex:i] objectForKey:@"name"] isEqualToString:name]){
-			if([[self.series objectAtIndex:i] objectForKey:@"data"] == nil){
+		if([(self.series)[i][@"name"] isEqualToString:name]){
+			if((self.series)[i][@"data"] == nil){
 				NSMutableArray *tempData = [[NSMutableArray alloc] init];
-			    [[self.series objectAtIndex:i] setObject:tempData forKey:@"data"];
+			    (self.series)[i][@"data"] = tempData;
 			}
 			
 			for(int j=0;j<data.count;j++){
-				[[[self.series objectAtIndex:i] objectForKey:@"data"] addObject:[data objectAtIndex:j]];
+				[(self.series)[i][@"data"] addObject:data[j]];
 			}
 	    }
 	}
@@ -428,9 +428,9 @@
 
 -(void)clearDataforName:(NSString *)name{
 	for(int i=0;i<self.series.count;i++){
-		if([[[self.series objectAtIndex:i] objectForKey:@"name"] isEqualToString:name]){
-			if([[self.series objectAtIndex:i] objectForKey:@"data"] != nil){
-				[[[self.series objectAtIndex:i] objectForKey:@"data"] removeAllObjects];
+		if([(self.series)[i][@"name"] isEqualToString:name]){
+			if((self.series)[i][@"data"] != nil){
+				[(self.series)[i][@"data"] removeAllObjects];
 			}
 	    }
 	}
@@ -438,28 +438,28 @@
 
 -(void)clearData{
 	for(int i=0;i<self.series.count;i++){
-		[[[self.series objectAtIndex:i] objectForKey:@"data"] removeAllObjects];
+		[(self.series)[i][@"data"] removeAllObjects];
 	}
 }
 
 -(void)setData:(NSMutableArray *)data forName:(NSString *)name{
 	for(int i=0;i<self.series.count;i++){
-		if([[[self.series objectAtIndex:i] objectForKey:@"name"] isEqualToString:name]){
-		    [[self.series objectAtIndex:i] setObject:data forKey:@"data"];
+		if([(self.series)[i][@"name"] isEqualToString:name]){
+		    (self.series)[i][@"data"] = data;
 		}
 	}
 }
 
 -(void)appendToCategory:(NSArray *)category forName:(NSString *)name{
 	for(int i=0;i<self.series.count;i++){
-		if([[[self.series objectAtIndex:i] objectForKey:@"name"] isEqualToString:name]){
-			if([[self.series objectAtIndex:i] objectForKey:@"category"] == nil){
+		if([(self.series)[i][@"name"] isEqualToString:name]){
+			if((self.series)[i][@"category"] == nil){
 				NSMutableArray *tempData = [[NSMutableArray alloc] init];
-			    [[self.series objectAtIndex:i] setObject:tempData forKey:@"category"];
+			    (self.series)[i][@"category"] = tempData;
 			}
 			
 			for(int j=0;j<category.count;j++){
-				[[[self.series objectAtIndex:i] objectForKey:@"category"] addObject:[category objectAtIndex:j]];
+				[(self.series)[i][@"category"] addObject:category[j]];
 			}
 	    }
 	}
@@ -467,9 +467,9 @@
 
 -(void)clearCategoryforName:(NSString *)name{
 	for(int i=0;i<self.series.count;i++){
-		if([[[self.series objectAtIndex:i] objectForKey:@"name"] isEqual:name]){
-			if([[self.series objectAtIndex:i] objectForKey:@"category"] != nil){
-				[[[self.series objectAtIndex:i] objectForKey:@"category"] removeAllObjects];
+		if([(self.series)[i][@"name"] isEqual:name]){
+			if((self.series)[i][@"category"] != nil){
+				[(self.series)[i][@"category"] removeAllObjects];
 			}
 	    }
 	}
@@ -477,14 +477,14 @@
 
 -(void)clearCategory{
 	for(int i=0;i<self.series.count;i++){
-		[[[self.series objectAtIndex:i] objectForKey:@"category"] removeAllObjects];
+		[(self.series)[i][@"category"] removeAllObjects];
 	}
 }
 
 -(void)setCategory:(NSMutableArray *)category forName:(NSString *)name{
 	for(int i=0;i<self.series.count;i++){
-		if([[[self.series objectAtIndex:i] objectForKey:@"name"] isEqualToString:name]){
-		    [[self.series objectAtIndex:i] setObject:category forKey:@"category"];
+		if([(self.series)[i][@"name"] isEqualToString:name]){
+		    (self.series)[i][@"category"] = category;
 		}
 	}
 }
@@ -493,11 +493,11 @@
  * Sections
  */
 -(Section *)getSection:(int) index{
-    return [self.sections objectAtIndex:index];
+    return (self.sections)[index];
 }
 -(int)getIndexOfSection:(CGPoint) point{
     for(int i=0;i<self.sections.count;i++){
-	    Section *sec = [self.sections objectAtIndex:i];
+	    Section *sec = (self.sections)[i];
 		if (CGRectContainsPoint(sec.frame, point)){
 		    return i;
 		}
@@ -511,8 +511,8 @@
 -(NSMutableDictionary *)getSerie:(NSString *)name{
 	NSMutableDictionary *serie = nil;
     for(int i=0;i<self.series.count;i++){
-		if([[[self.series objectAtIndex:i] objectForKey:@"name"] isEqualToString:name]){
-			serie = [self.series objectAtIndex:i];
+		if([(self.series)[i][@"name"] isEqualToString:name]){
+			serie = (self.series)[i];
 			break;
 		}
 	}
@@ -523,15 +523,15 @@
 	if([serie isKindOfClass:[NSArray class]]){
 		int section = 0;
 	    for (NSDictionary *ser in (NSArray*)serie) {
-		    section = [[ser objectForKey:@"section"] intValue];
+		    section = [ser[@"section"] intValue];
 			[self.series addObject:ser];
 		}
-		[[[self.sections objectAtIndex:section] series] addObject:serie];
+		[[(self.sections)[section] series] addObject:serie];
 	}
     else{
 		int section = [((NSDictionary*)serie)[@"section"] intValue];
 		[self.series addObject:serie];
-		[[[self.sections objectAtIndex:section] series] addObject:serie];
+		[[(self.sections)[section] series] addObject:serie];
 	}
 }
 
@@ -553,7 +553,7 @@
 	for (int i=0; i< num; i++) {
 		Section *sec = [[Section alloc] init];
 		[self.sections addObject:sec];
-		[self.ratios addObject:[rats objectAtIndex:i]];
+		[self.ratios addObject:rats[i]];
 	}
 }
 
@@ -568,17 +568,17 @@
 		
 		int total = 0;
 		for (int i=0; i< self.ratios.count; i++) {
-			if([[self.sections objectAtIndex:i] hidden]){
+			if([(self.sections)[i] hidden]){
 			    continue;
 			}
-			int ratio = [[self.ratios objectAtIndex:i] intValue];
+			int ratio = [(self.ratios)[i] intValue];
 			total+=ratio;
 		}
 		
 		Section*prevSec = nil;
 		for (int i=0; i< self.sections.count; i++) {
-			int ratio = [[self.ratios objectAtIndex:i] intValue];
-			Section *sec = [self.sections objectAtIndex:i];
+			int ratio = [(self.ratios)[i] intValue];
+			Section *sec = (self.sections)[i];
 			if([sec hidden]){
 				continue;
 			}
@@ -602,15 +602,15 @@
 
 
 -(YAxis *)getYAxis:(int) section withIndex:(int) index{
-	Section *sec = [self.sections objectAtIndex:section];
-	YAxis *yaxis = [sec.yAxises objectAtIndex:index];
+	Section *sec = (self.sections)[section];
+	YAxis *yaxis = (sec.yAxises)[index];
     return yaxis;
 }
 
 /* 
  * UIView Methods
  */
-- (id)initWithFrame:(CGRect)frame {
+- (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
 	if (self) {
 		self.enableSelection = YES;
@@ -664,11 +664,11 @@
 }
 
 -(void)addModel:(ChartModel *)model withName:(NSString *)name{
-    [self.models setObject:model forKey:name];
+    (self.models)[name] = model;
 }
 
 -(ChartModel *)getModel:(NSString *)name{
-    return [self.models objectForKey:name];
+    return (self.models)[name];
 }
 
 - (void)drawRect:(CGRect)rect {
@@ -696,23 +696,23 @@
 	self.touchFlag = 0;
 	self.touchFlagTwo = 0;
 	if([ts count]==1){
-		UITouch* touch = [ts objectAtIndex:0];
+		UITouch* touch = ts[0];
 		if([touch locationInView:self].x < 40){
 		    self.touchFlag = [touch locationInView:self].y;
 		}
 	}else if ([ts count]==2) {
-		self.touchFlag = [[ts objectAtIndex:0] locationInView:self].x ;
-		self.touchFlagTwo = [[ts objectAtIndex:1] locationInView:self].x;
+		self.touchFlag = [ts[0] locationInView:self].x ;
+		self.touchFlagTwo = [ts[1] locationInView:self].x;
 	}
 }
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event{
 	NSArray *ts = [touches allObjects];	
 	if([ts count]==1){
-		UITouch* touch = [ts objectAtIndex:0];
+		UITouch* touch = ts[0];
 		int i = [self getIndexOfSection:[touch locationInView:self]];
 		if(i!=-1){
-			Section *sec = [self.sections objectAtIndex:i];
+			Section *sec = (self.sections)[i];
 			if([touch locationInView:self].x > sec.paddingLeft)
 				[self setSelectedIndexByPoint:[touch locationInView:self]];
 			int interval = 5;
@@ -760,8 +760,8 @@
 		}
 		
 	}else if ([ts count]==2) {
-		float currFlag = [[ts objectAtIndex:0] locationInView:self].x;
-		float currFlagTwo = [[ts objectAtIndex:1] locationInView:self].x;
+		float currFlag = [ts[0] locationInView:self].x;
+		float currFlagTwo = [ts[1] locationInView:self].x;
 		if(self.touchFlag == 0){
 		    self.touchFlag = currFlag;
 			self.touchFlagTwo = currFlagTwo;
@@ -844,7 +844,7 @@
 	if([ts count]==1){
 		int i = [self getIndexOfSection:[touch locationInView:self]];
 		if(i!=-1){
-			Section *sec = [self.sections objectAtIndex:i];
+			Section *sec = (self.sections)[i];
 			if([touch locationInView:self].x > sec.paddingLeft){
 				if(sec.paging){
 					[sec nextPage];

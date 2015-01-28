@@ -12,7 +12,7 @@
 @synthesize selectedItems;
 @synthesize searchBar;
 
-- (id)initWithBar:(UISearchBar *) bar{
+- (instancetype)initWithBar:(UISearchBar *) bar{
 	if(self = [super init]){
 		self.searchBar = bar;
 	}
@@ -54,7 +54,7 @@
 	cell.textLabel.backgroundColor = [UIColor clearColor];
 
 	if (self.selectedItems!=nil) {
-	    cell.textLabel.text = [[[self.selectedItems objectAtIndex:row] objectAtIndex:1] stringByAppendingFormat:@"   %@",[[self.selectedItems objectAtIndex:row] objectAtIndex:0]];
+	    cell.textLabel.text = [(self.selectedItems)[row][1] stringByAppendingFormat:@"   %@",(self.selectedItems)[row][0]];
 	}else {
 		cell.textLabel.text = @"正在加载数据...";
 	}
@@ -71,7 +71,7 @@
 
 -(void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath{ 
     NSInteger row = indexPath.row;
-	self.searchBar.text = [[[self.selectedItems objectAtIndex:row] objectAtIndex:1] stringByAppendingFormat:@"（%@）",[[self.selectedItems objectAtIndex:row] objectAtIndex:0]];
+	self.searchBar.text = [(self.selectedItems)[row][1] stringByAppendingFormat:@"（%@）",(self.selectedItems)[row][0]];
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
